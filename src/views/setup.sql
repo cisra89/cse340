@@ -1,3 +1,8 @@
+CREATE TABLE service_project (
+    project_id SERIAL PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    description TEXT NOT NULL
+);
 
 CREATE TABLE organization (
     organization_id SERIAL PRIMARY KEY,
@@ -6,8 +11,6 @@ CREATE TABLE organization (
     contact_email VARCHAR(255) NOT NULL,
     logo_filename VARCHAR(255) NOT NULL
 );
-
-
 
 INSERT INTO organization (
     name,
@@ -34,3 +37,59 @@ VALUES
     'hello@unityserve.org',
     'unityserve-logo.png'
 );
+
+INSERT INTO service_project (
+    name,
+    description
+)
+VALUES
+(
+    'Park Cleanup',
+    'Join us to clean up local parks and make them beautiful!'
+),
+(
+    'Food Drive',
+    'Help collect and distribute food to those in need.'
+),
+(
+    'Community Tutoring',
+    'Volunteer to tutor students in various subjects.'
+);
+
+CREATE TABLE category (
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+
+INSERT INTO category (name)
+VALUES
+('Education'),
+('Environment'),
+('Community Service');
+
+CREATE TABLE project_category (
+    project_id INT NOT NULL,
+    category_id INT NOT NULL,
+
+    PRIMARY KEY (project_id, category_id),
+
+    CONSTRAINT fk_project
+        FOREIGN KEY (project_id)
+        REFERENCES service_project(project_id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_category
+        FOREIGN KEY (category_id)
+        REFERENCES category(category_id)
+        ON DELETE CASCADE
+);
+
+INSERT INTO project_category (
+    project_id,
+    category_id
+)
+VALUES
+(1, 2),
+(2, 3),
+(3, 1);
+
