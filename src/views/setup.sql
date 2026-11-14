@@ -1,15 +1,37 @@
-CREATE TABLE service_project (
-    project_id SERIAL PRIMARY KEY,
-    name VARCHAR(150) NOT NULL,
-    description TEXT NOT NULL
-);
-
 CREATE TABLE organization (
     organization_id SERIAL PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
     description TEXT NOT NULL,
     contact_email VARCHAR(255) NOT NULL,
     logo_filename VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE service_project (
+    project_id SERIAL PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    description TEXT NOT NULL
+);
+
+CREATE TABLE category (
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE project_category (
+    project_id INT NOT NULL,
+    category_id INT NOT NULL,
+
+    PRIMARY KEY (project_id, category_id),
+
+    CONSTRAINT fk_project
+        FOREIGN KEY (project_id)
+        REFERENCES service_project(project_id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_category
+        FOREIGN KEY (category_id)
+        REFERENCES category(category_id)
+        ON DELETE CASCADE
 );
 
 INSERT INTO organization (
@@ -56,33 +78,11 @@ VALUES
     'Volunteer to tutor students in various subjects.'
 );
 
-CREATE TABLE category (
-    category_id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL UNIQUE
-);
-
 INSERT INTO category (name)
 VALUES
 ('Education'),
 ('Environment'),
 ('Community Service');
-
-CREATE TABLE project_category (
-    project_id INT NOT NULL,
-    category_id INT NOT NULL,
-
-    PRIMARY KEY (project_id, category_id),
-
-    CONSTRAINT fk_project
-        FOREIGN KEY (project_id)
-        REFERENCES service_project(project_id)
-        ON DELETE CASCADE,
-
-    CONSTRAINT fk_category
-        FOREIGN KEY (category_id)
-        REFERENCES category(category_id)
-        ON DELETE CASCADE
-);
 
 INSERT INTO project_category (
     project_id,
